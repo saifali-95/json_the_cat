@@ -1,20 +1,30 @@
 const request = require('request');
-const userInput = process.argv;
+const breedName = process.argv[2];
 
-const breedDescriptionSearcher = function() {
-  request(`https://api.thecatapi.com/v1/breeds/search?q=${userInput[2]}`, (error, response, body) => {
+const fetchBreedDescription = function(breedName, callback) {
+  
+  request(`https://api.thecatapi.com/v1/breeds/search?q=${breedName}`, (error, response, body) => {
     // Print the error if one occurred
     if (error) {
-      console.log('error:', error);
+      callback(error, null);
+    // eslint-disable-next-line brace-style
     }
     //If no error occured then proceed with the next steps
     else {
-
       const breedDescription = JSON.parse(body); //Convert the string into an object,
-      console.log(breedDescription['0']['description']); // Print the HTML for the Google homepage.
+      const desc = breedDescription['0']['description'];
+      callback(null, desc);
     }
   });
-
 };
 
-breedDescriptionSearcher();
+
+
+module.exports = {fetchBreedDescription};
+
+
+
+
+
+
+
